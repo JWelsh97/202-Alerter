@@ -2,6 +2,7 @@ import requests
 import sys
 import yaml
 from pushbullet import PushBullet
+import datetime
 
 
 def sitestatus(url):
@@ -13,9 +14,9 @@ def sitestatus(url):
     try:
         r = requests.get(url)
     except requests.ConnectionError:
-        return ("Error", "Webserver is offline.")
+        return ("Error", "Webserver is offline")
     except requests.Timeout:
-        return ("Error", "Server is offline.")
+        return ("Error", "Server is offline")
     except Exception as e:
         return ("Error", str(e))
     else:
@@ -28,17 +29,19 @@ def read_config():
     """
     f = open("config.yaml", "r")
     conf = f.read()
-    f.close()
+    f.close()    
     return yaml.load(conf)
 
 
 conf = read_config()
-sitestatus = sitestatus(conf["site"])
-pb = PushBullet(conf["access_token"])
-get_devices = pb.get_devices()
-if sys.argv > 1:
-    for arg in sys.argv:
-        if arg == "--list":
-            print get_devices
-if sitestatus[0] == "Error":
-    push = pb.push_note(sitestatus[0], sitestatus[1], conf["devices"])
+if sitestatus("https://google.com")[0] == "Up!":
+    sitestatus = sitestatus(conf["site"])
+    pb = PushBullet(conf["access_token"])
+    get_devices = pb.get_devices()
+    if sys.argv > 1:
+        for arg in sys.argv:
+            if arg == "--list":    
+                print "%s: %s\n" % (get_devices[0][0], get_devices[0][1])
+    if sys.argv < 1:
+        if sitestatus[0] == "Error":
+            push = pb.push_note(sitestatus[0], "%s as of %s" % (sitestatus[1], datetime.datetime.now), conf["devices"])
