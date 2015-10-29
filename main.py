@@ -23,6 +23,7 @@ def sitestatus(url):
         return ("Up!", "Site is up!")
 
 
+
 def read_config():
     """
     Reads the YAML config file
