@@ -8,10 +8,10 @@ class PushBullet(object):
         self.__s.headers = {"Access-Token": access_token}
 
     def get_devices(self):
-        '''
+        """
         Gathers dictionary of all devices,
         places data needed into tuple
-        '''
+        """
         try:
             r = json.loads(self.__s.get("https://api.pushbullet.com/v2/devices").text)
         except:
@@ -25,9 +25,9 @@ class PushBullet(object):
         return result
 
     def push_note(self, title, body, devices):
-        '''
+        """
         Uses a post to send a push note.
-        '''
+        """
         result = []
         if isinstance(devices, list):
             for iden in devices:
