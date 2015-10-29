@@ -20,15 +20,14 @@ class PushBullet(object):
                     result.append((device["nickname"], device["iden"]))
         return result
 
-def push_note(self, title, body, devices):
-    result = []
-    if isinstance(devices, list):
-        for iden in devices:
-            post = self.__s.post("https://api.pushbullet.com/v2/pushes",
-                                 data={"type": "note",
-                                       "device_iden": iden,
-                                       "title": title,
-                                       "body": body})
-            result.append(post.text)
-    return result
-                
+    def push_note(self, title, body, devices):
+        result = []
+        if isinstance(devices, list):
+            for iden in devices:
+                post = self.__s.post("https://api.pushbullet.com/v2/pushes",
+                                     data={"type": "note",
+                                           "device_iden": iden,
+                                           "title": title,
+                                           "body": body})
+                result.append(post.text)
+        return result
