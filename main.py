@@ -3,6 +3,7 @@ import sys
 import yaml
 from pushbullet import PushBullet
 
+
 def sitestatus(url):
     """
     Determines why the site
@@ -16,7 +17,9 @@ def sitestatus(url):
     except requests.Timeout:
         return ("Error", "Server is offline.")
     except Exception as e:
-        return ("Failure", str(e))
+        return ("Error", str(e))
+    else:
+        return ("Up!", "Site is up!")
 
 
 def read_config():
@@ -31,11 +34,11 @@ def read_config():
 
 conf = read_config()
 sitestatus = sitestatus(conf["site"])
-print sitestatus
 pb = PushBullet(conf["access_token"])
+get_devices = pb.get_devices()
 if sys.argv > 1:
     for arg in sys.argv:
-        if sys.arg == "--list":
-            for device in pb.get_devices():
-                print device
-
+        if arg == "--list":
+            print get_devices
+if sitestatus[0] == "Error":
+    push = pb.push_note(sitestatus[0], sitestatus[1], conf["devices"])

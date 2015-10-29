@@ -2,7 +2,7 @@ import requests
 import json
 
 class PushBullet(object):
-    def __init__(self):
+    def __init__(self, access_token):
         self.__s = requests.session()
         self.__s.headers = {"Access-Token": access_token}
     
@@ -15,21 +15,21 @@ class PushBullet(object):
             r = json.loads(self.__s.get("https://api.pushbullet.com/v2/devices").text)
         except:    
             result = []
-        if "devices" in request:
-            devices = request["devices"]
+        if "devices" in r:
+            devices = r["devices"]
             result = []
             for device in devices:
                 if device["active"]:
-                    result.append(device, device["device_iden"])
+                    result.append((device["nickname"], device["iden"]))
         return result
         
-    def push_note(self, device_iden, title, body):
+    def push_note(self, title, body, devices):
         result = []
         if isinstance(devices, list):
-            for device in devices:
+            for iden in devices:
                 post = self.__s.post("https://api.pushbullet.com/v2/pushes",
                                      data={"type": "note",
-                                           "device": device_iden,
+                                           "device_iden": iden,
                                            "title": title,
                                            "body": body})
                 result.append(post.text)
