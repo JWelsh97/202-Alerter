@@ -40,9 +40,15 @@ if sitestatus("https://google.com")[0] == "Up!":
     sitestatus = sitestatus(conf["site"])
     pb = PushBullet(conf["access_token"])
     get_devices = pb.get_devices()
+    index = -1
     if sys.argv > 1:
         for arg in sys.argv:
-            if arg == "--list":   
-                print "%s: %s" % (get_devices[0][0], get_devices[0][1])
-    if sitestatus[0] == "Error!":
+            if arg == "--list":
+                arg = True
+                for device in get_devices:
+                    index += 1
+                    print "%s: %s" % (get_devices[index][0], get_devices[index][1])
+            else:
+                arg = False
+    if arg == False and sitestatus[0] == "Error!":
         pb.push_note(sitestatus[0], "%s as of %s" % (sitestatus[1], dateandtime), conf["devices"])
