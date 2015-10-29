@@ -16,6 +16,7 @@ def sitestatus(url):
     except Exception as e:
         return ("Failure", str(e))
 
+
 def read_config():
     '''
     Reads the YAML config file
