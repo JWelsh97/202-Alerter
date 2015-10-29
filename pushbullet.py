@@ -20,7 +20,7 @@ class PushBullet(object):
             result = []
             for device in devices:
                 if device["active"]:
-                    result.append(device)
+                    result.append(device, device["device_iden"])
         return result
         
     def push_note(self, device_iden, title, body):
