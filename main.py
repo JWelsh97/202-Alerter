@@ -35,7 +35,7 @@ def read_config():
 
 
 if sitestatus("https://google.com")[0] == "Up!":
-    dateandtime = datetime.datetime.now().strftime("%I:%M%p %d %B, %Y")
+    dateandtime = datetime.datetime.now().strftime("%H:%M:%S %d/%m/%y")
     conf = read_config()
     sitestatus = sitestatus(conf["site"])
     pb = PushBullet(conf["access_token"])
