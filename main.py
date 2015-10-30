@@ -59,8 +59,8 @@ conf = read_config()
 pb = PushBullet(conf["access_token"])
 
 if "--list" in sys.argv:
-    for device in pb.get_devices():
-        print("%s: %s" % device)
+    for idx, device in enumerate(pb.get_devices()):
+        print('[{0}] {1}: {2}'.format(idx, *device))
 else:
     if site_status("https://google.com")["state"] == SiteState.up:
         main(pb, conf)
