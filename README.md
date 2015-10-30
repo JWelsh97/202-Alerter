@@ -4,6 +4,7 @@ Uses the Pushbullet platform to alert you through your selected devices when the
 Rename example.config.yaml to config.yaml. Fill out all of the fields.
 ## Dependencies
 <code>pip install pyyaml</code>
+<code>pip install enum34</code>
 ## Usage
 <code>python main.py --list</code> to view identities.<br />
 <code>python main.py</code> to run program.
