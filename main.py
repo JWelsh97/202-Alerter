@@ -19,24 +19,24 @@ def site_status(url):
     try:
         r = requests.get(url, timeout=5)
     except requests.ConnectionError:
-        return {"state": SiteStatus.error,
+        return {"state": SiteState.error,
                 "status": -1,
                 "reason": "Webserver is offline"}
     except requests.Timeout:
-        return {"state": SiteStatus.error,
+        return {"state": SiteState.error,
                 "status": -1,
                 "reason":  "Server is offline"}
     except Exception as e:
-        return {"state": SiteStatus.error,
+        return {"state": SiteState.error,
                 "status": -1,
                 "reason": str(e)}
 
     if r.status_code == "200":
-        return {"state": SiteStatus.up,
+        return {"state": SiteState.up,
                 "status": r.status_code,
                 "reason": r.reason}
     else:
-        return {"state": SiteStatus.up,
+        return {"state": SiteState.up,
                 "status": r.status_code,
                 "reason": r.reason}
 
@@ -55,11 +55,11 @@ def main(pb, conf):
     dt_time = datetime.datetime.now().strftime("%I:%M%p %d/%m/%y")
     devices = conf["devices"]
 
-    if status["state"] == SiteStatus.down:
+    if status["state"] == SiteState.down:
         pb.push_note("Website Unavailable",
                      "%s as of %s" % (status["reason"], dt_time),
                      devices)
-    elif status["state"] == SiteStatus.error:
+    elif status["state"] == SiteState.error:
         pb.push_note("Website Offline",
                      "%s as of %s" % (status["reason"], dt_time),
                      devices)
