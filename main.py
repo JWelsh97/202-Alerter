@@ -41,6 +41,10 @@ def read_config():
 
 
 def main(pb, conf):
+    """
+    Determines which message is used
+    pushes selected message out to devices
+    """
     status = site_status(conf["site"])
     dt_time = datetime.datetime.now().strftime("%I:%M%p %d/%m/%y")
     devices = conf["devices"]
