@@ -64,7 +64,6 @@ def add_device(pb, dev_num):
         print('Added %s' % dev_name)
 
 
-
 def main(pb, conf):
     """
     Determines which message is used
