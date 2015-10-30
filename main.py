@@ -64,3 +64,4 @@ if "--list" in sys.argv:
 else:
     if site_status("https://google.com")["state"] == SiteState.up:
         main(pb, conf)
+
