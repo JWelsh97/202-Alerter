@@ -18,17 +18,27 @@ def site_status(url):
     """
     try:
         r = requests.get(url, timeout=5)
-    except requests.Timeout:
-        return {'state': SiteState.error, 'status': -1, 'reason': "Server is offline"}
     except requests.ConnectionError:
-        return {'state': SiteState.error, 'status': -1, 'reason': "Webserver is offline"}
+        return {"state": SiteStatus.error,
+                "status": -1,
+                "reason": "Webserver is offline"}
+    except requests.Timeout:
+        return {"state": SiteStatus.error,
+                "status": -1,
+                "reason":  "Server is offline"}
     except Exception as e:
-        return {'state': SiteState.error, 'status': -1, 'reason': str(e)}
+        return {"state": SiteStatus.error,
+                "status": -1,
+                "reason": str(e)}
 
-    if r.status_code == 200:
-        return {'state': SiteState.up, 'status': r.status_code, 'reason': r.reason}
+    if r.status_code == "200":
+        return {"state": SiteStatus.up,
+                "status": r.status_code,
+                "reason": r.reason}
     else:
-        return {'state': SiteState.down, 'status': r.status_code, 'reason': r.reason}
+        return {"state": SiteStatus.up,
+                "status": r.status_code,
+                "reason": r.reason}
 
 
 def read_config():
@@ -41,29 +51,25 @@ def read_config():
 
 
 def main(pb, conf):
-    status = site_status(conf['site'])
-    dt_time = datetime.datetime.now().strftime("%I:%M%p %m/%d/%y")
-    devices = conf['devices']
+    status = site_status(conf["site"])
+    dt_time = datetime.datetime.now().strftime("%I:%M%p %d/%m/%y")
+    devices = conf["devices"]
 
-    if status['state'] == SiteState.down:
-        pb.push_note(
-            'Website Unavailable',
-            '%s %s as of %s' % (status['status'], status['reason'], dt_time),
-            devices
-        )
-    elif status['state'] == SiteState.error:
-        pb.push_note(
-            'Website Offline',
-            '%s as of %s' % (status['reason'], dt_time),
-            devices
-        )
+    if status["state"] == SiteStatus.down:
+        pb.push_note("Website Unavailable",
+                     "%s as of %s" % (status["reason"], dt_time),
+                     devices)
+    elif status["state"] == SiteStatus.error:
+        pb.push_note("Website Offline",
+                     "%s as of %s" % (status["reason"], dt_time),
+                     devices)
 
 
 conf = read_config()
-pb = PushBullet(conf['access_token'])
+pb = PushBullet(conf["access_token"])
 
-if '--list' in sys.argv:
+if "--list" in sys.argv:
     for device in pb.get_devices():
-        print('%s: %s' % device)
+        print("%s: %s" % device)
 else:
     main(pb, conf)
