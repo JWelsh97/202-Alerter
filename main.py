@@ -40,6 +40,31 @@ def read_config():
     return conf
 
 
+def add_device(pb, dev_num):
+    conf = read_config()
+    dev_lst = pb.get_devices()
+    try:
+        dev_name, dev_id = dev_lst[dev_num]
+    except:
+        print('Invalid device')
+        return
+
+    if not 'devices' in conf:
+        conf['devices'] = []
+
+    if not isinstance(conf['devices'], list):
+        conf['devices'] = []
+
+    if dev_id in conf['devices']:
+        print('%s is already listed' % dev_name)
+    else:
+        conf['devices'].append(dev_id)
+        with open('config.yaml', 'w') as f:
+            f.write(yaml.dump(conf))
+        print('Added %s' % dev_name)
+
+
+
 def main(pb, conf):
     """
     Determines which message is used
@@ -65,6 +90,16 @@ pb = PushBullet(conf["access_token"])
 if "--list" in sys.argv:
     for idx, device in enumerate(pb.get_devices()):
         print('[{0}] {1}: {2}'.format(idx, *device))
+elif "--add" in sys.argv:
+    idx = sys.argv.index('--add')
+    try:
+        dev_num = int(sys.argv[idx + 1])
+    except:
+        print('Incorrect usage')
+        print('Example: --add NUMBER')
+        sys.exit()
+    add_device(pb, dev_num)
+    
 else:
     if site_status("https://google.com")["state"] == SiteState.up:
         main(pb, conf)
