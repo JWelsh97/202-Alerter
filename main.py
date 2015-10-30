@@ -20,14 +20,14 @@ def site_status(url):
     """
     try:
         r = requests.get(url, timeout=5)
-    except requests.ConnectionError:
-        return {"state": SiteStatus.error,
-                "status": -1,
-                "reason": "Webserver is offline"}
     except requests.Timeout:
         return {"state": SiteStatus.error,
                 "status": -1,
                 "reason":  "Server is offline"}
+    except requests.ConnectionError:
+        return {"state": SiteStatus.error,
+                "status": -1,
+                "reason": "Webserver is offline"}
     except Exception as e:
         return {"state": SiteStatus.error,
                 "status": -1,
@@ -74,4 +74,5 @@ if "--list" in sys.argv:
     for device in pb.get_devices():
         print("%s: %s" % device)
 else:
-    main(pb, conf)
+    if site_status("https://google.com")["state"] == SiteStatus.up:
+        main(pb, conf)
