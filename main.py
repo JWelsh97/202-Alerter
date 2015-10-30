@@ -64,7 +64,6 @@ def add_device(pb, dev_num):
         print('Added %s' % dev_name)
 
 
-
 def main(pb, conf):
     status = site_status(conf["site"])
     dt_time = datetime.datetime.now().strftime("%I:%M%p %d/%m/%y")
