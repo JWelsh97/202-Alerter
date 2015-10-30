@@ -76,5 +76,5 @@ if "--list" in sys.argv:
     for device in pb.get_devices():
         print("%s: %s" % device)
 else:
-    if site_status("https://google.com")["state"] == SiteStatus.up:
+    if site_status("https://google.com")["state"] == SiteState.up:
         main(pb, conf)
