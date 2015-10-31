@@ -1,9 +1,11 @@
+#!/usr/bin/python
 import requests
 import sys
 import yaml
 from pushbullet import PushBullet
 import datetime
 from enum import Enum
+import os
 
 
 class SiteState(Enum):
@@ -35,14 +37,20 @@ def read_config():
     """
     Reads the YAML config file
     """
-    with open("config.yaml", "r") as f:
+    path = os.path.dirname(os.path.realpath(sys.argv[0]))
+    with open("%s/config.yaml"% path, "r") as f:
         conf = yaml.load(f)
     return conf
 
 
 def add_device(pb, dev_num):
+    """
+    Adds a device identity to config
+    using --add command
+    """
     conf = read_config()
     dev_lst = pb.get_devices()
+    path = os.path.dirname(os.path.realpath(sys.argv[0]))
     try:
         dev_name, dev_id = dev_lst[dev_num]
     except:
@@ -59,7 +67,7 @@ def add_device(pb, dev_num):
         print('%s is already listed' % dev_name)
     else:
         conf['devices'].append(dev_id)
-        with open('config.yaml', 'w') as f:
+        with open('%s/config.yaml' % path, 'w') as f:
             f.write(yaml.dump(conf))
         print('Added %s' % dev_name)
 
