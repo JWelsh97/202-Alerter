@@ -1,11 +1,11 @@
-# Site-Alerter
+# Site-Alerter #
 Uses the Pushbullet platform to alert you through your selected devices when the selected site goes down.
-## Configuration
+## Configuration ##
 Rename example.config.yaml to config.yaml. Fill out all of the fields.
-## Dependencies
-<code>pip install pyyaml</code><br />
-<code>pip install enum34</code>
-## Usage
-<code>python main.py --list</code> to view identities.<br />
-<code>python main.py</code> to run program.
-
+## Dependencies  ##
+```pip install pyyaml```  
+```pip install enum34```
+## Usage ##
+```python main.py --list``` to view device id and identities.  
+```python main.py --add <device_id_here>``` to add the the selected device_id to your config.  
+```python main.py``` to run program.
