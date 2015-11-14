@@ -1,4 +1,4 @@
-site: "" # Add the website here, that you want to be notified on
+sites: "" # Add the website here, that you want to be notified on
 access_token: ""
 devices:
     - ""
