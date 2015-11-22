@@ -11,16 +11,16 @@ Rename example.config.yaml to config.yaml. Fill out all of the fields.
 `python main.py` will run the program.
 
 ## Arguments ##
-**-l**
-**--list-devices**
-Prints the list of devices on your Pushbullet account
-[device_id] device_name: device_identity
+**-l**  
+**--list-devices**  
+Prints the list of devices on your Pushbullet account  
+[device_id] device_name: device_identity  
 
-**-a**
-**--add-device** *device_id*
-Adds the selected device_id (found using -l/--list-devices argument) to your configuration.
+**-a**  
+**--add-device** *device_id*  
+Adds the selected device_id (found using -l/--list-devices argument) to your configuration.  
 
-**-r**
-**--remove-device** *device_id*
-Removes the selected device_id (found using -l/--list-devices argument) from your configuration.
+**-r**  
+**--remove-device** *device_id*  
+Removes the selected device_id (found using -l/--list-devices argument) from your configuration.  
 
