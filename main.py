@@ -2,11 +2,10 @@
 
 import requests
 import sys
-import yaml
+import config
 from pushbullet import PushBullet
 import datetime
 from enum import Enum
-import os
 
 
 class SiteState(Enum):
@@ -34,24 +33,12 @@ def site_status(url):
         return {'state': SiteState.up, 'status': r.status_code, 'reason': r.reason}
 
 
-def read_config():
-    """
-    Reads the YAML config file
-    """
-    path = os.path.dirname(os.path.realpath(__file__))
-    with open(os.path.join(path, 'config.yaml'), 'r') as f:
-        conf = yaml.load(f)
-    return conf
-
-
-def add_device(pb, dev_num):
+def add_device(pb, conf, dev_num):
     """
     Adds a device identity to config
-    using --add command
+    using --add-device or -a command
     """
-    conf = read_config()
     dev_lst = pb.get_devices()
-    path = os.path.dirname(os.path.realpath(__file__))
     try:
         dev_name, dev_id = dev_lst[dev_num]
     except:
@@ -68,9 +55,31 @@ def add_device(pb, dev_num):
         print('%s is already listed' % dev_name)
     else:
         conf['devices'].append(dev_id)
-        with open(os.path.join(path, 'config.yaml'), 'w') as f:
-            f.write(yaml.dump(conf))
+        config.write_config(conf)
         print('Added %s' % dev_name)
+
+
+def remove_device(pb, conf, dev_num):
+    """
+    Removes a device identity
+    from the config using
+    --remove-device or -r
+    """
+    dev_lst = pb.get_devices()
+    try:
+        dev_name, dev_id = dev_lst[dev_num]
+    except:
+        print('Invalid device')
+        return
+
+    if 'devices' in conf:
+        try:
+            conf['devices'].pop(conf['devices'].index(dev_id))
+        except:
+            print('That device is not in your config')
+            return
+        config.write_config(conf)
+        print('Removed %s' % dev_name)
 
 
 def main(pb, site, conf):
@@ -83,30 +92,40 @@ def main(pb, site, conf):
     devices = conf['devices']
 
     if status['state'] == SiteState.down:
-        pb.push_note('Website {0} Unavailable'.format(site),
+        pb.push_note('Website ({0}) Unavailable'.format(site),
                      '%s as of %s' % (status['reason'], dt_time),
                      devices)
+
     elif status['state'] == SiteState.error:
         pb.push_note('Website ({0}) Offline'.format(site),
                      '%s as of %s' % (status['reason'], dt_time),
                      devices)
 
 
-conf = read_config()
+conf = config.read_config()
 pb = PushBullet(conf['access_token'])
 
-if '--list' in sys.argv:
+if '-l' in sys.argv or '--list-devices' in sys.argv:
     for idx, device in enumerate(pb.get_devices()):
         print('[{0}] {1}: {2}'.format(idx, *device))
-elif '--add' in sys.argv:
-    idx = sys.argv.index('--add')
+
+elif '-a' in sys.argv or '--add-device' in sys.argv:
     try:
-        dev_num = int(sys.argv[idx + 1])
+        dev_num = int(sys.argv[2])
     except:
         print('Incorrect usage')
-        print('Example: --add NUMBER')
+        print('Example: -a/--add-device NUMBER')
         sys.exit()
-    add_device(pb, dev_num)
+    add_device(pb, conf, dev_num)
+
+elif '-r' in sys.argv or '--remove-device' in sys.argv:
+    try:
+        dev_num = int(sys.argv[2])
+    except:
+        print('Incorrect usage')
+        print('Example: -r/--remove-device NUMBER')
+        sys.exit()
+    remove_device(pb, conf, dev_num)
 
 else:
     if site_status('https://google.com')['state'] == SiteState.up:

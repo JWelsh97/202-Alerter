@@ -1,4 +1,5 @@
 sites: "" # Add the website here, that you want to be notified on
-access_token: ""
+access_token: "" # Enter Pushbullet Access Token
 devices:
-    - ""
+    - [""] # Use the --list-devices argument and --add-device.
+           # If done manually, separate each site by comma, do not remove the [].
