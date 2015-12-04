@@ -19,7 +19,7 @@ def site_status(url):
     Determines why the site cannot be accessed
     """
     try:
-        r = requests.get(url, timeout=5)
+        r = requests.get(url, timeout=30)
     except requests.Timeout:
         return {'state': SiteState.error, 'status': -1, 'reason': 'Server is offline'}
     except requests.ConnectionError:
