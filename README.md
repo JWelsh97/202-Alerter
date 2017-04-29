@@ -24,3 +24,6 @@ Adds the selected device_id (found using -l/--list-devices argument) to your con
 **--remove-device** *device_id*  
 Removes the selected device_id (found using -l/--list-devices argument) from your configuration.  
 
+**-t**
+**--test**
+Sends a test push to each device in the configuration.  

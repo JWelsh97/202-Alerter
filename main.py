@@ -127,8 +127,11 @@ elif '-r' in sys.argv or '--remove-device' in sys.argv:
         sys.exit()
     remove_device(pb, conf, dev_num)
 
+elif '-t' in sys.argv or '--test' in sys.argv:
+    devices = conf['devices']
+    pb.push_note('Testing...', 'Test push', devices)
+
 else:
     if site_status('https://google.com')['state'] == SiteState.up:
         for site in conf['sites']:
             main(pb, site, conf)
-
