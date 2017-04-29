@@ -21,9 +21,9 @@ Prints the list of devices on your Pushbullet account
 Adds the selected device_id (found using -l/--list-devices argument) to your configuration.  
 
 **-r**  
-**--remove-device** *device_id*  
+**--remove-device** *device_id*   
 Removes the selected device_id (found using -l/--list-devices argument) from your configuration.  
 
-**-t**
-**--test**
+**-t**  
+**--test**  
 Sends a test push to each device in the configuration.  
